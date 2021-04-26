@@ -16,13 +16,16 @@ import java.io.Serializable;
 @Table(name = "product_color")
 public class ProductColor implements Serializable {
 
-    @Id
+
     @JoinColumn(name = "colorid")
     @ManyToOne
     private Color colorId;
 
-    @Id
     @JoinColumn(name = "productid")
     @ManyToOne
     private Product productId;
+
+    @Id
+    private String productColorId;
+
 }

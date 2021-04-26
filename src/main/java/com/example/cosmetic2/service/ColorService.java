@@ -15,4 +15,8 @@ public class ColorService {
     public List<Color> getAllColor(){
         return colorRepository.findAll();
     }
+
+    public void deleteColor(String id){
+        colorRepository.deleteById(id);
+    }
 }
