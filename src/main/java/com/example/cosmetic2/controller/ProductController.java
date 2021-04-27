@@ -4,10 +4,7 @@ import com.example.cosmetic2.model.Product;
 import com.example.cosmetic2.service.ProductColorService;
 import com.example.cosmetic2.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,13 +23,17 @@ public class ProductController {
 
     @DeleteMapping("/product/{id}")
     public void deleteProduct(@PathVariable String id){
-        productColorService.deleteProductColorByProductId(id);
-//        productService.deleteProduct(id);
-//        productService.deleteProduct(id);
+        productService.deleteProduct(id);
     }
 
-//    @GetMapping("/product/{id}")
-//    public Optional<Product> findById(@PathVariable String id){
-//        return productService.findById(id);
-//    }
+    @PostMapping("/product/add")
+    public Product addProduct(@RequestBody Product newProduct){
+        return productService.addProduct(newProduct);
+    }
+
+    @PutMapping("/product/edit/{id}")
+    public Product editProduct(@RequestBody Product newProduct, @PathVariable String id) {
+        return productService.editProduct(newProduct, id);
+    }
+
 }

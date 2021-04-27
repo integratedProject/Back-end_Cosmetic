@@ -25,4 +25,22 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
+    public Product addProduct(Product newProduct){
+//        newProduct.setProductId(newProduct.getProductId());
+//        newProduct.setProductName(newProduct.getProductName());
+        return productRepository.save(newProduct);
+    }
+
+    public Product editProduct(Product newProduct, String id){
+        return productRepository.findById(id).map(product -> {
+            product.setProductName(newProduct.getProductName());
+            product.setProductImage(newProduct.getProductImage());
+            product.setPrice(newProduct.getPrice());
+            product.setColors(newProduct.getColors());
+            product.setBrandId(newProduct.getBrandId());
+            product.setDescription(newProduct.getDescription());
+            product.setLaunchDate(newProduct.getLaunchDate());
+            return productRepository.save(product);
+        }).orElse(null);
+    }
 }
