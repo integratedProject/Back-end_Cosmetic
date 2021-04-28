@@ -15,5 +15,9 @@
 ## 62130500079 Wanisara Khamracha<br>
 
 ### Complete
-
+- Create Docker file and docker-compose.yml
+- Define username and password for connecting database in environment to prevent outsiders to see our username and password
+- Deploy on web
+- Create bridge network to 3 containers
+- 
 ### In progress
