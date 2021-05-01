@@ -4,7 +4,9 @@ import com.example.cosmetic2.model.Product;
 import com.example.cosmetic2.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +14,9 @@ import java.util.Optional;
 public class ProductService {
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    PhotoService photoService;
 
     public List<Product> getAllProduct(){
         return productRepository.findAll();
@@ -42,5 +47,10 @@ public class ProductService {
             product.setLaunchDate(newProduct.getLaunchDate());
             return productRepository.save(product);
         }).orElse(null);
+    }
+
+    public Product addProductWithPicture(MultipartFile file, Product newProduct) throws IOException {
+        newProduct.setProductImage(photoService.imageUpload(file));
+        return  newProduct;
     }
 }
