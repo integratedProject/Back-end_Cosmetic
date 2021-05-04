@@ -1,11 +1,14 @@
 package com.example.cosmetic2.service;
 
+import com.example.cosmetic2.Exceptions.ExceptionsResponse;
+import com.example.cosmetic2.Exceptions.ProductsExceptions;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.ProtocolException;
 
 @Service
 public class PhotoService {
@@ -22,10 +25,16 @@ public class PhotoService {
     }
 
     public ResponseEntity<byte[]> getPhoto(String file) throws IOException {
-        System.out.println("Filename : " + file);
-        FileInputStream fileInputStream = new FileInputStream("photo" + "/" + file);
-        byte[] image = fileInputStream.readAllBytes();
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+        try {
+            System.out.println("Filename : " + file);
+            FileInputStream fileInputStream = new FileInputStream("photo" + "/" + file);
+            byte[] image = fileInputStream.readAllBytes();
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+        }catch (FileNotFoundException e) {
+            System.out.println(e);
+            throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.ITEM_DOES_NOT_EXIST, "Photo file name : " + file +" doesn't exists");
+        }
+
     }
 
 }
