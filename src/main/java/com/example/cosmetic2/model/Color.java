@@ -20,4 +20,5 @@ public class Color {
     @Id
     private String colorId;
     private String colorName;
+    private String codeColor;
 }
