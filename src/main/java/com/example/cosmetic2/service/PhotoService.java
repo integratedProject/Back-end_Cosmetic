@@ -9,6 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.net.ProtocolException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 
 @Service
 public class PhotoService {
@@ -35,6 +38,18 @@ public class PhotoService {
             throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.ITEM_DOES_NOT_EXIST, "Photo file name : " + file +" doesn't exists");
         }
 
+    }
+
+    public void deleteFile(String file){
+        try{
+            Files.delete(Path.of("photo"+ "/"+ file));
+        }catch (NoSuchFileException e){
+            System.out.println(e);
+            e.printStackTrace();
+            throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.ITEM_DOES_NOT_EXIST,"This file doesn't exists");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

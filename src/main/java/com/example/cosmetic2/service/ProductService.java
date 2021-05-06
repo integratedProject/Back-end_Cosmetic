@@ -28,7 +28,12 @@ public class ProductService {
 
     public void deleteProduct(String id){
         try{
-            productRepository.deleteById(id);
+            productRepository.findById(id).map(product -> {
+                photoService.deleteFile(product.getProductImage());
+                productRepository.deleteById(id);
+                return null;
+            });
+
         }catch (EmptyResultDataAccessException e){
             System.out.println(e);
             throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.ITEM_DOES_NOT_EXIST,"product "+id+" doesn't exists");
@@ -85,8 +90,48 @@ public class ProductService {
         }).get();
     }
 
+    public Product editProductAndPicture(MultipartFile file, Product newProduct, String id){
+        try{
+            System.out.println(newProduct.getProductName());
+            List<Product> productList = productRepository.findAll();
+            Product[] products = new Product[productList.size()];
+            productList.toArray(products);
+            for (Product product : products){
+                if (product.getProductName().equals(newProduct.getProductName())){
+                    System.out.println("This name has already");
+                    if (!product.getProductId().equals(id)){
+                        System.out.println("ID of new product : " + id);
+                        System.out.println("Check this ID");
+                        System.out.println("This ID : " + product.getProductId());
+                        throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.ITEM_ALREADY_EXIST,"This ID product : " + newProduct.getProductId() + " has already exists ");
+                    }
+                }
+            }
+            productRepository.findById(id).map(product -> {
+                product.setProductName(newProduct.getProductName());
+                product.setPrice(newProduct.getPrice());
+                product.setDescription(newProduct.getDescription());
+                product.setLaunchDate(newProduct.getLaunchDate());
+                product.setBrandId(newProduct.getBrandId());
+                product.setColors(newProduct.getColors());
+                photoService.deleteFile(product.getProductImage());
+                try {
+                    String productImage = photoService.imageUpload(file);
+                    product.setProductImage(productImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return productRepository.save(product);
+            }).get();
+        }catch (NoSuchElementException e){
+            System.out.println(e);
+            throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.ITEM_DOES_NOT_EXIST,"Not have ID product : " + newProduct.getProductId());
+        }
+        return null;
+    }
+
     public Product addProductWithPicture(MultipartFile file, Product newProduct) throws IOException {
         newProduct.setProductImage(photoService.imageUpload(file));
-        return  newProduct;
+        return productRepository.save(newProduct);
     }
 }

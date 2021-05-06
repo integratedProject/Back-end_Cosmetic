@@ -30,29 +30,38 @@ public class ProductController {
         return productService.findById(id);
     }
 
-    @DeleteMapping("/product/{id}")
-    public void deleteProduct(@PathVariable String id){
-        productService.deleteProduct(id);
-    }
-
-    @PostMapping("/product/add")
-    public Product addProduct(@RequestBody Product newProduct){
-        return productService.addProduct(newProduct);
-    }
-
-    @PutMapping("/product/edit/{id}")
-    public Product editProduct(@RequestBody Product newProduct, @PathVariable String id) {
-        return productService.editProduct(newProduct, id);
-    }
-
-    @PostMapping("/product/photo")
-    public Product addProductWithPhoto(@RequestParam("file")MultipartFile file, @RequestPart Product product) throws IOException {
-        return productService.addProductWithPicture(file, product);
-    }
-
     @GetMapping("/product/photo/{file}")
     public ResponseEntity<byte[]> getPhoto(@PathVariable String file) throws IOException {
         return photoService.getPhoto(file);
     }
 
+    @PostMapping("/product/add")
+    public Product addProductWithPhoto(@RequestParam("file")MultipartFile file, @RequestPart Product product) throws IOException {
+        return productService.addProductWithPicture(file, product);
+    }
+
+    @PostMapping("/product/add/data")
+    public Product addProduct(@RequestBody Product newProduct){
+        return productService.addProduct(newProduct);
+    }
+
+    @PutMapping("/product/edit/data/{id}")
+    public Product editProduct(@RequestBody Product newProduct, @PathVariable String id) {
+        return productService.editProduct(newProduct, id);
+    }
+
+    @PutMapping("/product/edit/{id}")
+    public Product editProductAndPicture(@RequestParam("file")MultipartFile file, @RequestPart Product newProduct, @PathVariable String id){
+        return productService.editProductAndPicture(file, newProduct, id);
+    }
+
+    @DeleteMapping("/product/{id}")
+    public void deleteProduct(@PathVariable String id){
+        productService.deleteProduct(id);
+    }
+
+    @DeleteMapping("/product/photo/{file}")
+    public void deleteFile(@PathVariable String file) {
+        photoService.deleteFile(file);
+    }
 }
