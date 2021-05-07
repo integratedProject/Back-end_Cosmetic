@@ -3,8 +3,6 @@ services:
   backend:
     build: .
     container_name: backend_server
-    ports:
-      - '3000:3000'
     environment:
       - DB_SERVER=${DB_SERVER}
       - DB_USER=${DB_USER}
