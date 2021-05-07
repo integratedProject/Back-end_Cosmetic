@@ -41,6 +41,11 @@ public class ProductController {
         return productService.addProductWithPicture(file, product);
     }
 
+    @PostMapping("/product/add/photo")
+    public String imageUpload(@RequestParam("file")MultipartFile file) throws IOException {
+        return photoService.imageUpload(file);
+    }
+
     @PostMapping("/product/add/data")
     public Product addProduct(@RequestBody Product newProduct){
         return productService.addProduct(newProduct);
