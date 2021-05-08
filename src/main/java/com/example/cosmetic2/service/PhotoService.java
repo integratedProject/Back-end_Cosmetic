@@ -17,14 +17,17 @@ import java.nio.file.Path;
 public class PhotoService {
 
     public String imageUpload(MultipartFile file) throws IOException {
-        File imageFile = new File (  "./photo/" + file.getOriginalFilename());
-        imageFile.createNewFile();
-        FileOutputStream fos = new FileOutputStream(imageFile);
-        fos.write(file.getBytes());
-        fos.close();
-        String test = file.getOriginalFilename();
-        return file.getOriginalFilename();
-
+        try{
+            File imageFile = new File (  "./photo/" + file.getOriginalFilename());
+            imageFile.createNewFile();
+            FileOutputStream fos = new FileOutputStream(imageFile);
+            fos.write(file.getBytes());
+            fos.close();
+            String test = file.getOriginalFilename();
+            return file.getOriginalFilename();
+        }catch (FileNotFoundException e){
+            throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.NOT_HAVE_FILE,"Please input your file");
+        }
     }
 
     public ResponseEntity<byte[]> getPhoto(String file) throws IOException {
@@ -34,8 +37,7 @@ public class PhotoService {
             byte[] image = fileInputStream.readAllBytes();
             return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
         }catch (FileNotFoundException e) {
-            System.out.println(e);
-            throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.ITEM_DOES_NOT_EXIST, "Photo file name : " + file +" doesn't exists");
+            throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.PRODUCT_DOES_NOT_EXIST, "Photo file name : " + file +" doesn't exists");
         }
 
     }
@@ -44,9 +46,8 @@ public class PhotoService {
         try{
             Files.delete(Path.of("photo"+ "/"+ file));
         }catch (NoSuchFileException e){
-            System.out.println(e);
             e.printStackTrace();
-            throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.ITEM_DOES_NOT_EXIST,"This file doesn't exists");
+            throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.PRODUCT_DOES_NOT_EXIST,"This file doesn't exists");
         } catch (IOException e) {
             e.printStackTrace();
         }

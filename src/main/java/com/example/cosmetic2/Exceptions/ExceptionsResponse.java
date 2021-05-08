@@ -10,8 +10,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ExceptionsResponse {
     public static enum ERROR_CODE {
-        ITEM_DOES_NOT_EXIST(1001),
-        ITEM_ALREADY_EXIST(2001);
+        PRODUCT_DOES_NOT_EXIST(4001),
+        PRODUCT_ALREADY_EXIST(4002),
+        NOT_HAVE_FILE(4003);
         private int value;
 
         ERROR_CODE(int value) {
