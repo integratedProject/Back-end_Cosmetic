@@ -51,7 +51,8 @@ public class ProductService {
 
     public Product addProduct(Product newProduct){
         if (newProduct.getProductId() == "" || newProduct.getProductName() == "" || newProduct.getPrice() < 0 ||
-            newProduct.getDescription() == "" || newProduct.getBrandId() == null){
+            newProduct.getDescription() == "" || newProduct.getBrandId() == null || newProduct.getProductImage() == ""||
+            newProduct.getColors() == null){
             throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.PRODUCT_DOES_NOT_EXIST,"Product some data not null");
         }
         List<Product> productList = productRepository.findAll();
