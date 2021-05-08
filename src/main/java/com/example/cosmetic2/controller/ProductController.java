@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -38,6 +39,7 @@ public class ProductController {
 
     @PostMapping("/product/add")
     public Product addProductWithPhoto(@RequestParam("file")MultipartFile file, @RequestPart Product product) throws IOException {
+        product.setProductId(UUID.randomUUID().toString());
         return productService.addProductWithPicture(file, product);
     }
 

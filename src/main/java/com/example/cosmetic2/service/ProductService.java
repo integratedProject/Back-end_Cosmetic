@@ -64,7 +64,6 @@ public class ProductService {
                 throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.PRODUCT_ALREADY_EXIST,"Product name : " + newProduct.getProductName() + " already exists");
             }
         }
-        newProduct.setProductId(newProduct.getProductId());
         newProduct.setProductName(newProduct.getProductName());
         newProduct.setProductImage(newProduct.getProductImage());
         newProduct.setPrice(newProduct.getPrice());
