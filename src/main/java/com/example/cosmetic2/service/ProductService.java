@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -28,7 +29,8 @@ public class ProductService {
 
     public void deleteProduct(String id){
         try{
-            productRepository.findById(id).map(product -> {
+                productRepository.deleteById(id);
+                productRepository.findById(id).map(product -> {
                 photoService.deleteFile(product.getProductImage());
                 productRepository.deleteById(id);
                 return null;
@@ -36,9 +38,8 @@ public class ProductService {
 
         }catch (EmptyResultDataAccessException e){
             throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.PRODUCT_DOES_NOT_EXIST,"product "+id+" doesn't exists");
-        }
 
-    }
+        }}
 
     public Product findById(String id){
         try{
@@ -50,28 +51,29 @@ public class ProductService {
     }
 
     public Product addProduct(Product newProduct){
-        if (newProduct.getProductId() == "" || newProduct.getProductName() == "" || newProduct.getPrice() < 0 ||
-            newProduct.getDescription() == "" || newProduct.getBrandId() == null || newProduct.getProductImage() == ""||
-            newProduct.getColors() == null){
-            throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.PRODUCT_DOES_NOT_EXIST,"Product some data not null");
-        }
-        List<Product> productList = productRepository.findAll();
-        Product[] products = new Product[productList.size()];
-        productList.toArray(products);
-        for (Product product : products) {
-            if (product.getProductId().equals(newProduct.getProductId())) {
-                throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.PRODUCT_ALREADY_EXIST, "Product id : " + newProduct.getProductId() + " already exists");
-            }if(product.getProductName().equals(newProduct.getProductName())){
-                throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.PRODUCT_ALREADY_EXIST,"Product name : " + newProduct.getProductName() + " already exists");
+            if (newProduct.getProductId() == "" || newProduct.getProductName() == "" || newProduct.getPrice() <= 0.0 ||
+                    newProduct.getDescription() == "" || newProduct.getBrandId() == null || newProduct.getProductImage() == ""||
+                    newProduct.getColors() == null){
+                throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.PRODUCT_DOES_NOT_EXIST,"Product some data not null");
             }
-        }
-        newProduct.setProductName(newProduct.getProductName());
-        newProduct.setProductImage(newProduct.getProductImage());
-        newProduct.setPrice(newProduct.getPrice());
-        newProduct.setLaunchDate(newProduct.getLaunchDate());
-        newProduct.setDescription(newProduct.getDescription());
-        newProduct.setBrandId(newProduct.getBrandId());
-        return productRepository.save(newProduct);
+            List<Product> productList = productRepository.findAll();
+            Product[] products = new Product[productList.size()];
+            productList.toArray(products);
+            for (Product product : products) {
+                if (product.getProductId().equals(newProduct.getProductId())) {
+                    throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.PRODUCT_ALREADY_EXIST, "Product id : " + newProduct.getProductId() + " already exists");
+                }if(product.getProductName().equals(newProduct.getProductName())){
+                    throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.PRODUCT_ALREADY_EXIST,"Product name : " + newProduct.getProductName() + " already exists");
+                }
+            }
+            newProduct.setProductName(newProduct.getProductName());
+            newProduct.setProductImage(newProduct.getProductImage());
+            newProduct.setPrice(newProduct.getPrice());
+            newProduct.setLaunchDate(newProduct.getLaunchDate());
+            newProduct.setDescription(newProduct.getDescription());
+            newProduct.setBrandId(newProduct.getBrandId());
+            return productRepository.save(newProduct);
+
     }
 
     public Product editProduct(Product newProduct, String id){
@@ -96,9 +98,6 @@ public class ProductService {
             for (Product product : products){
                 if (product.getProductName().equals(newProduct.getProductName())){
                     System.out.println("This name has already");
-                    if (!product.getProductId().equals(id)){
-                        throw new ProductsExceptions(ExceptionsResponse.ERROR_CODE.PRODUCT_ALREADY_EXIST,"This ID product : " + newProduct.getProductId() + " has already exists ");
-                    }
                 }
             }
             productRepository.findById(id).map(product -> {

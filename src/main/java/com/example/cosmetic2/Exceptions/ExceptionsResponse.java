@@ -12,7 +12,8 @@ public class ExceptionsResponse {
     public static enum ERROR_CODE {
         PRODUCT_DOES_NOT_EXIST(4001),
         PRODUCT_ALREADY_EXIST(4002),
-        NOT_HAVE_FILE(4003);
+        NOT_HAVE_FILE(4003),
+        SOME_DATA_NOT_NULL(4004);
         private int value;
 
         ERROR_CODE(int value) {
